@@ -1,17 +1,18 @@
 package main
 
 import (
+	"./handlers"
 	"github.com/gin-gonic/gin"
 )
 
-func main() {
-	r := gin.Default()
+func SetupRouter() *gin.Engine {
+	router := gin.Default()
+	router.POST("/solve", handlers.Solve)
+	return router
+}
 
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
+func main() {
+	r := SetupRouter()
 
 	r.Run() // listen and serve on 0.0.0.0:8080
 }

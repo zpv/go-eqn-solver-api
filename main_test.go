@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -14,8 +15,17 @@ func TestNoEquation(t *testing.T) {
 
 	body := bytes.NewBuffer([]byte("{\"eqn\": \"\"}"))
 
-	req, err := http.NewRequest("POST", "/solve", nil)
-	if err == nil {
-		t.Errorf("Should have expected an error.", err)
+	req, err := http.NewRequest("POST", "/solve", body)
+	req.Header.Set("Content-Type", "application/json")
+
+	if err != nil {
+		t.Errorf("Post request generation failed %d", err)
+	}
+
+	resp := httptest.NewRecorder()
+	testRouter.ServeHTTP(resp, req)
+
+	if resp.Code != 400 {
+		t.Error("Expected 400 error.")
 	}
 }
