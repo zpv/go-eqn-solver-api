@@ -3,17 +3,36 @@ package solve
 import (
 	"errors"
 	"fmt"
+	"net/http"
 	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
+// Request JSON struct
+type RequestJSON struct {
+	Eqn string `json:"eqn" binding:"required"`
+}
+
 // Solve handles
 func Solve(c *gin.Context) {
+	var json RequestJSON
+
+	if err := c.ShouldBindJSON(&json); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	res, err := solveEquation(json.Eqn)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	c.JSON(200, gin.H{
-		"message": "pong",
+		"result": res,
 	})
 }
 

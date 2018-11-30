@@ -1,13 +1,13 @@
 package app
 
 import (
-	"./handlers"
+	"./handlers/solve"
 	"github.com/gin-gonic/gin"
 )
 
 // Sets up router
 func SetupRouter() *gin.Engine {
 	router := gin.Default()
-	router.POST("/solve", handlers.Solve)
+	router.POST("/solve", solve.Solve)
 	return router
 }
