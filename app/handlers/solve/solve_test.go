@@ -41,6 +41,47 @@ func TestSolveComplexEquations(t *testing.T) {
 	}
 }
 
+func TestSolveInfiniteSolnEquations(t *testing.T) {
+	testCases := make(map[string]string)
+
+	testCases["x=x"] = "Infinite solutions"
+	testCases["2x=2x"] = "Infinite solutions"
+	testCases["3x=3x"] = "Infinite solutions"
+	testCases["100x=100x"] = "Infinite solutions"
+	testCases["0=0"] = "Infinite solutions"
+	testCases["10=10"] = "Infinite solutions"
+	testCases["50=50"] = "Infinite solutions"
+
+	for k, v := range testCases {
+		result, err := solveEquation(k)
+
+		if err != nil {
+			t.Error("Error was not expected")
+			return
+		}
+
+		assertEqual(t, result, v, "")
+	}
+}
+
+func TestSolveNoSolnEquations(t *testing.T) {
+	testCases := make(map[string]string)
+
+	testCases["0=-12"] = "No solution"
+	testCases["x-x=5"] = "No solution"
+
+	for k, v := range testCases {
+		result, err := solveEquation(k)
+
+		if err != nil {
+			t.Error("Error was not expected")
+			return
+		}
+
+		assertEqual(t, result, v, "")
+	}
+}
+
 func TestSolveEquationsWithSpaces(t *testing.T) {
 	testCases := make(map[string]string)
 
@@ -62,7 +103,7 @@ func TestSolveEquationsWithDecimals(t *testing.T) {
 	testCases := make(map[string]string)
 
 	testCases["5x=4"] = "x=0.8"
-	testCases["4x=8"] = "x=0.5"
+	testCases["8x=4"] = "x=0.5"
 
 	for k, v := range testCases {
 		result, err := solveEquation(k)
@@ -73,6 +114,27 @@ func TestSolveEquationsWithDecimals(t *testing.T) {
 		}
 
 		assertEqual(t, result, v, "")
+	}
+}
+
+func TestSolveInvalidEquations(t *testing.T) {
+	testCases := []string{
+		"2x=",
+		"4x=-",
+		"4x=  -   ",
+		"--x--=--x--",
+		"ax + bx = cx",
+		"2x",
+		"",
+		"=",
+	}
+
+	for _, v := range testCases {
+		_, err := solveEquation(v)
+
+		if err == nil {
+			t.Error("Error was expected")
+		}
 	}
 }
 

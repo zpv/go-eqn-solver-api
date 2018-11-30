@@ -44,8 +44,8 @@ func solveEquation(eqn string) (string, error) {
 	left.coefficient = left.coefficient - right.coefficient
 	left.constant = right.constant - left.constant
 
-	if left.coefficient == 0 && right.coefficient == 0 {
-		return "Inf. solutions", nil
+	if left.coefficient == 0 && left.constant == 0 {
+		return "Infinite solutions", nil
 	}
 
 	if left.coefficient == 0 {
@@ -64,8 +64,14 @@ func evaluateExpression(exp string) (expressionResult, error) {
 	coefficient := 0
 	sum := 0
 
+	if len(tokens) == 1 && tokens[0] == "" {
+		return expressionResult{}, errors.New("Invalid expression")
+	}
+
 	for _, v := range tokens {
-		if v == "+x" || v == "x" {
+		if v == "" {
+			continue
+		} else if v == "+x" || v == "x" {
 			coefficient++
 		} else if v == "-x" {
 			coefficient--
