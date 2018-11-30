@@ -2,6 +2,8 @@ package solve
 
 import (
 	"errors"
+	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -9,6 +11,7 @@ import (
 
 // Solve handles
 func Solve(c *gin.Context) {
+
 	c.JSON(200, gin.H{
 		"message": "pong",
 	})
@@ -16,27 +19,73 @@ func Solve(c *gin.Context) {
 
 type expressionResult struct {
 	coefficient int
-	constants   int
+	constant    int
 }
 
 // Solve a linear equation with one unknown, x
+// Rounds to 8 decimal places
 func solveEquation(eqn string) (string, error) {
 	// Remove spaces.
 	eqn = strings.Replace(eqn, " ", "", -1)
 
-	if !validString(eqn) {
-		return "", errors.New("eqn: invalid linear equation")
+	expressions := strings.Split(eqn, "=")
+
+	if len(expressions) != 2 {
+		return "", errors.New("Invalid equation")
 	}
 
-	return "", nil
+	left, err := evaluateExpression(expressions[0])
+	right, err2 := evaluateExpression(expressions[1])
+
+	if err != nil || err2 != nil {
+		return "", errors.New("Invalid equation")
+	}
+
+	left.coefficient = left.coefficient - right.coefficient
+	left.constant = right.constant - left.constant
+
+	if left.coefficient == 0 && right.coefficient == 0 {
+		return "Inf. solutions", nil
+	}
+
+	if left.coefficient == 0 {
+		return "No solution", nil
+	}
+
+	result := fmt.Sprintf("%.8f", (float64(left.constant) / float64(left.coefficient)))
+	// Trim trailing zeroes and decimal
+	result = strings.TrimRight(strings.TrimRight(result, "0"), ".")
+
+	return "x=" + result, nil
 }
 
-func evaluateExpression(exp string) expressionResult {
-	// stub
-	return expressionResult{0, 0}
-}
+func evaluateExpression(exp string) (expressionResult, error) {
+	tokens := strings.Split(strings.Replace(strings.Replace(exp, "-", "#-", -1), "+", "#+", -1), "#")
+	coefficient := 0
+	sum := 0
 
-func validString(eqn string) bool {
-	// stub
-	return false
+	for _, v := range tokens {
+		if v == "+x" || v == "x" {
+			coefficient++
+		} else if v == "-x" {
+			coefficient--
+		} else if v[len(v)-1] == 'x' {
+			i, err := strconv.ParseInt(v[:strings.Index(v, "x")], 10, 32)
+
+			if err != nil {
+				return expressionResult{}, errors.New("Invalid expression")
+			}
+
+			coefficient += int(i)
+		} else {
+			i, err := strconv.ParseInt(v, 10, 64)
+
+			if err != nil {
+				return expressionResult{}, errors.New("Invalid expression")
+			}
+
+			sum += int(i)
+		}
+	}
+	return expressionResult{coefficient, sum}, nil
 }
