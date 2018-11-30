@@ -76,7 +76,7 @@ func performSolveRequest(r http.Handler, eqn string) *httptest.ResponseRecorder 
 	json, _ := json.Marshal(eqnMap)
 
 	body := bytes.NewBuffer([]byte(string(json)))
-	req, _ := http.NewRequest("POST", "/solve", body)
+	req, _ := http.NewRequest("POST", "/api/solve", body)
 	req.Header.Set("Content-Type", "application/json")
 
 	w := httptest.NewRecorder()

@@ -53,6 +53,8 @@ func solveEquation(eqn string) (string, error) {
 		return "", errors.New("Invalid equation")
 	}
 
+	// Calculate total coefficients and constants
+	// for left and right expressions
 	left, err := evaluateExpression(expressions[0])
 	right, err2 := evaluateExpression(expressions[1])
 
@@ -60,6 +62,7 @@ func solveEquation(eqn string) (string, error) {
 		return "", errors.New("Invalid equation")
 	}
 
+	// Resolve
 	left.coefficient = left.coefficient - right.coefficient
 	left.constant = right.constant - left.constant
 
@@ -71,18 +74,21 @@ func solveEquation(eqn string) (string, error) {
 		return "No solution", nil
 	}
 
+	// Calculate `x` and trim trailing zeroes and decimal
 	result := fmt.Sprintf("%.8f", (float64(left.constant) / float64(left.coefficient)))
-	// Trim trailing zeroes and decimal
 	result = strings.TrimRight(strings.TrimRight(result, "0"), ".")
 
 	return "x=" + result, nil
 }
 
 func evaluateExpression(exp string) (expressionResult, error) {
+	// Split tokens on + and -
 	tokens := strings.Split(strings.Replace(strings.Replace(exp, "-", "#-", -1), "+", "#+", -1), "#")
-	coefficient := 0
-	sum := 0
 
+	coefficient := 0
+	constant := 0
+
+	// If it is just an empty string, return false
 	if len(tokens) == 1 && tokens[0] == "" {
 		return expressionResult{}, errors.New("Invalid expression")
 	}
@@ -95,6 +101,7 @@ func evaluateExpression(exp string) (expressionResult, error) {
 		} else if v == "-x" {
 			coefficient--
 		} else if v[len(v)-1] == 'x' {
+			// Parse and add coefficient
 			i, err := strconv.ParseInt(v[:strings.Index(v, "x")], 10, 32)
 
 			if err != nil {
@@ -103,14 +110,15 @@ func evaluateExpression(exp string) (expressionResult, error) {
 
 			coefficient += int(i)
 		} else {
+			// Parse and add constant
 			i, err := strconv.ParseInt(v, 10, 64)
 
 			if err != nil {
 				return expressionResult{}, errors.New("Invalid expression")
 			}
 
-			sum += int(i)
+			constant += int(i)
 		}
 	}
-	return expressionResult{coefficient, sum}, nil
+	return expressionResult{coefficient, constant}, nil
 }
