@@ -247,7 +247,7 @@ Demo the API <a href="/">here.</a></p>
 <blockquote>
 <p>Single solution</p>
 </blockquote>
-<pre class="highlight shell tab-shell"><code>curl http://localhost:8080/solve <span class="se">\</span>
+<pre class="highlight shell tab-shell"><code>curl https://go-eqn-solver.azurewebsites.net/api/solve <span class="se">\</span>
   --header <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   --request POST <span class="se">\</span>
   --data <span class="s1">'{"eqn":"2x=4"}'</span>
@@ -258,7 +258,7 @@ Demo the API <a href="/">here.</a></p>
 <blockquote>
 <p>Infinite solutions</p>
 </blockquote>
-<pre class="highlight shell tab-shell"><code>curl http://localhost:8080/solve <span class="se">\</span>
+<pre class="highlight shell tab-shell"><code>curl https://go-eqn-solver.azurewebsites.net/api/solve <span class="se">\</span>
   --header <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   --request POST <span class="se">\</span>
   --data <span class="s1">'{"eqn":"2x=2x"}'</span>
@@ -269,7 +269,7 @@ Demo the API <a href="/">here.</a></p>
 <blockquote>
 <p>No solution</p>
 </blockquote>
-<pre class="highlight shell tab-shell"><code>curl http://localhost:8080/solve <span class="se">\</span>
+<pre class="highlight shell tab-shell"><code>curl https://go-eqn-solver.azurewebsites.net/api/solve <span class="se">\</span>
   --header <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   --request POST <span class="se">\</span>
   --data <span class="s1">'{"eqn":"x+5=x"}'</span>

@@ -11,7 +11,7 @@ func SetupRouter() *gin.Engine {
 	router := gin.Default()
 
 	router.Use(static.Serve("/", static.LocalFile("./app/public/home", true)))
-	router.Use(static.Serve("/docs", static.LocalFile("./app/public/docs", true)))
+	router.Use(static.Serve("/docs/", static.LocalFile("./app/public/docs", true)))
 
 	api := router.Group("/api")
 	{

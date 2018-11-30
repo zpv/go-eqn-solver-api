@@ -10,7 +10,7 @@
   <p align="center">
     A simple microservice to solve linear equations, built in Golang.
     <br>
-    <a href="https://go-eqn-solver.azurewebsites.net/docs"><strong>Explore go-eqn-solver docs »</strong></a>
+    <a href="https://go-eqn-solver.azurewebsites.net/docs/"><strong>Explore go-eqn-solver docs »</strong></a>
     <br>
     <a href="https://go-eqn-solver.azurewebsites.net"><strong>Demo it now »</strong></a>
   </p>
